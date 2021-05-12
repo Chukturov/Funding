@@ -1,0 +1,10 @@
+﻿@using Funding
+@using Funding.Models
+@using Microsoft.AspNetCore.Identity
+@using Funding.Areas.Identity.Data
+@using Funding.Data
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@inject UserManager<FundingUser> UserManager
+@inject SignInManager<FundingUser> SignInManager
+@inject FundingContext _context
