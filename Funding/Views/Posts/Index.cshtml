@@ -71,10 +71,20 @@
                 </td>
                 <td>
                     @*<img id="@item.Id" src="https://toppng.com/uploads/preview/free-download-heart-11563286716fdbd349pnj.png" onClick="imgsrc(@item.Id);">*@
-                    <input id="like" data-id="@item.Id" type="button" value="Like" class="btn btn-danger" onclick="like_func(this)" />
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        @if (_context.Like.Where(l => l.Post.Id == @item.Id && l.User.Id == UserManager.GetUserId(User)).Count()>0)
+                        {
+                            <input id="like" data-id="@item.Id" type="button" value="Like" class="btn btn-info" onclick="like_func(this)" />
+                        }
+                        else
+                        {
+                            <input id="like" data-id="@item.Id" type="button" value="Like" class="btn btn-danger" onclick="like_func(this)" />
+                        }
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    }
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a>
                 </td>
             </tr>
         }
