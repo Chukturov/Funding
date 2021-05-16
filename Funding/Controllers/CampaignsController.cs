@@ -9,12 +9,17 @@ using Funding.Data;
 using Funding.Data.Model;
 using Microsoft.AspNetCore.Identity;
 using Funding.Areas.Identity.Data;
+using Dropbox.Api;
+using System.IO;
+using System.Text.RegularExpressions;
+using Dropbox.Api.Files;
 
 namespace Funding.Controllers
 {
     public class CampaignsController : Controller
     {
         private readonly FundingContext _context;
+        private static string token = "QAY0acSlThsAAAAAAAAAAT5434MivLSp9jW9JZcy6Q6E5apgXHpirN0MiLmqDoE_";
 
         public CampaignsController(FundingContext context)
         {
@@ -60,12 +65,52 @@ namespace Funding.Controllers
         {
             if (ModelState.IsValid)
             {
-                campaign.User = await _context.Users.FirstOrDefaultAsync(u => u.Id==campaign.User.Id);
+                using (var dbx = new DropboxClient(token))
+                {
+                    List<CampaignImgs> campaignImgs = new List<CampaignImgs>();
+                    var PathImg = $"/{campaign.Name}/";
+                    //campaign.ImgFiles = HttpContext.Request.Form.Files;
+                    foreach (var item in campaign.ImgFiles)
+                    {
+                        var metadata = await dbx.Files.UploadAsync(PathImg + item.FileName, WriteMode.Add.Instance, true, body: item.OpenReadStream());
+                        campaignImgs.Add(new CampaignImgs()
+                        {
+                            campaign = campaign,
+                            Name = metadata.Name,
+                            Alt = metadata.Name,
+                            ImgLink = metadata.PathLower
+                        });
+                    }
+                    _context.AddRange(campaignImgs);//Разобраться с sql
+                }
+
+                campaign.User = await _context.Users.FirstOrDefaultAsync(u => u.Id == campaign.User.Id);
                 _context.Add(campaign);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(campaign);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> UploadImage(string file)
+        {
+            if (file == null)
+            {
+                return Json(false);
+            }
+            var base64Data = Regex.Match(file, @"data:image/(?<type>.+?),(?<data>.+)").Groups["data"].Value;
+            var binData = Convert.FromBase64String(base64Data);
+            using (var dbx = new DropboxClient(token))
+            {
+                string folder = "/Public";
+                string filename = "test.png";
+                using (var stream = new MemoryStream(binData))
+                {
+                    await dbx.Files.UploadAsync(folder + "/" + filename, WriteMode.Overwrite.Instance, body: stream);
+                }
+            }
+            return Json(true);
         }
 
         // GET: Campaigns/Edit/5

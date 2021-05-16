@@ -1,4 +1,5 @@
 ﻿using Funding.Areas.Identity.Data;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -23,9 +24,9 @@ namespace Funding.Data.Model
         ////public virtual Topic Topic { get; set; }
         ////public virtual BestUser BestUser { get; set; }
         ////public virtual IEnumerable<CampaignImg> Carousel { get; set; }
-        //[NotMapped]
-        //public IFormFile ImgFile { get; set; }
-        //[NotMapped]
-        //public IEnumerable<IFormFile> ImgsFile { get; set; }
+        [NotMapped]
+        public IFormFile ImgFile { get; set; }
+        [NotMapped]
+        public IEnumerable<IFormFile> ImgFiles { get; set; }
     }
 }

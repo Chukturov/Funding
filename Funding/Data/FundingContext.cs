@@ -30,5 +30,7 @@ namespace Funding.Data
         public DbSet<Funding.Data.Model.Post> Post { get; set; }
 
         public DbSet<Funding.Data.Model.Like> Like { get; set; }
+
+        public DbSet<Funding.Data.Model.CampaignImgs> CampaignImgs { get; set; }
     }
 }
