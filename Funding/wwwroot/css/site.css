@@ -141,8 +141,10 @@ p {
     object-fit: cover;
 }
 
-.carousel-item active {
+.carousel-item.active {
     height: 400px;
     display: flex;
     align-items: center;
 }
+
+
