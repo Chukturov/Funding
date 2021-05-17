@@ -1,5 +1,7 @@
 using Funding.Areas.Identity.Data;
 using Funding.Data;
+using Funding.Data.Interface;
+using Funding.Data.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -29,6 +31,7 @@ namespace Funding
             services.AddDbContext<FundingContext>(options => options.UseSqlServer(Configuration.GetConnectionString("FundingContextConnection")));
             services.AddControllersWithViews();
             services.AddRazorPages();
+            services.AddTransient<IDropbox, DropboxRepository>();
             services.AddDefaultIdentity<FundingUser>(options =>
             {
                 options.SignIn.RequireConfirmedAccount = true;

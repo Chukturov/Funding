@@ -4,14 +4,16 @@ using Funding.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Funding.Migrations
 {
     [DbContext(typeof(FundingContext))]
-    partial class FundingContextModelSnapshot : ModelSnapshot
+    [Migration("20210516061806_cLikeInCImg")]
+    partial class cLikeInCImg
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -124,9 +126,6 @@ namespace Funding.Migrations
                     b.Property<string>("Alt")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FundingUserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("ImgLink")
                         .HasColumnType("nvarchar(max)");
 
@@ -137,8 +136,6 @@ namespace Funding.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("FundingUserId");
 
                     b.HasIndex("СampaignId");
 
@@ -346,10 +343,6 @@ namespace Funding.Migrations
 
             modelBuilder.Entity("Funding.Data.Model.CampaignImgs", b =>
                 {
-                    b.HasOne("Funding.Areas.Identity.Data.FundingUser", null)
-                        .WithMany("CampaignImgs")
-                        .HasForeignKey("FundingUserId");
-
                     b.HasOne("Funding.Data.Model.Campaign", "Сampaign")
                         .WithMany()
                         .HasForeignKey("СampaignId");

@@ -3,7 +3,10 @@
 @using Microsoft.AspNetCore.Identity
 @using Funding.Areas.Identity.Data
 @using Funding.Data
+@using Funding.Data.Interface
+@inject IDropbox _dropbox
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, Funding
 
 @inject UserManager<FundingUser> UserManager
 @inject SignInManager<FundingUser> SignInManager

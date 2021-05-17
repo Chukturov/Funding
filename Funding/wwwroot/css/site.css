@@ -75,7 +75,6 @@ body {
     border-radius: 20px;
     width: 480px;
     font-family: sans-serif;
-    margin: 100px auto;
     padding: 20px;
 }
 
@@ -117,4 +116,33 @@ p {
 
 #fileElem {
     display: none;
+}
+
+.like{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.flex{
+    display: flex;
+}
+
+.like-container {
+    justify-content: space-around;
+    align-items: center;
+}
+
+.carousel-item img {
+    height: 100%;
+    object-fit: cover;
+}
+
+.carousel-item active {
+    height: 400px;
+    display: flex;
+    align-items: center;
 }

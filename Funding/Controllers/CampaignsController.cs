@@ -32,6 +32,15 @@ namespace Funding.Controllers
             return View(await _context.Campaign.ToListAsync());
         }
 
+        public async Task<string> GetImgByUrl(string Path)
+        {
+            using (var dbx = new DropboxClient(token))
+            {
+                var TemporaryLink = await dbx.Files.GetTemporaryLinkAsync(Path);
+                return TemporaryLink.Link;
+            }
+        }
+
         // GET: Campaigns/Details/5
         public async Task<IActionResult> Details(string id)
         {
@@ -65,27 +74,44 @@ namespace Funding.Controllers
         {
             if (ModelState.IsValid)
             {
-                using (var dbx = new DropboxClient(token))
-                {
-                    List<CampaignImgs> campaignImgs = new List<CampaignImgs>();
-                    var PathImg = $"/{campaign.Name}/";
-                    //campaign.ImgFiles = HttpContext.Request.Form.Files;
-                    foreach (var item in campaign.ImgFiles)
-                    {
-                        var metadata = await dbx.Files.UploadAsync(PathImg + item.FileName, WriteMode.Add.Instance, true, body: item.OpenReadStream());
-                        campaignImgs.Add(new CampaignImgs()
-                        {
-                            campaign = campaign,
-                            Name = metadata.Name,
-                            Alt = metadata.Name,
-                            ImgLink = metadata.PathLower
-                        });
-                    }
-                    _context.AddRange(campaignImgs);//Разобраться с sql
-                }
-
                 campaign.User = await _context.Users.FirstOrDefaultAsync(u => u.Id == campaign.User.Id);
                 _context.Add(campaign);
+                if (campaign.ImgFile != null)
+                {
+                    using (var dbx = new DropboxClient(token))
+                    {
+                        var PathImg = $"/Public/{campaign.Name}/Avatar/";
+                        var metadata = await dbx.Files.UploadAsync(PathImg + campaign.ImgFile.FileName, WriteMode.Add.Instance, true, body: campaign.ImgFile.OpenReadStream());
+                        campaign.Img = PathImg+campaign.ImgFile.FileName;
+                        _context.Add(campaign);
+                    }
+                }
+                else
+                {
+                    campaign.Img =  $"/Public/not-found.jpg";
+                    _context.Add(campaign);
+                }
+                if (campaign.ImgFiles != null)
+                {
+                    using (var dbx = new DropboxClient(token))
+                    {
+                        List<CampaignImgs> campaignImgs = new List<CampaignImgs>();
+                        //Поменять name на id после сдачи
+                        var PathImg = $"/Public/{campaign.Name}/Imgs/";
+                        foreach (var item in campaign.ImgFiles)
+                        {
+                            var metadata = await dbx.Files.UploadAsync(PathImg + item.FileName, WriteMode.Add.Instance, true, body: item.OpenReadStream());
+                            campaignImgs.Add(new CampaignImgs()
+                            {
+                                Сampaign = campaign,
+                                Name = metadata.Name,
+                                Alt = metadata.Name,
+                                ImgLink = metadata.PathLower
+                            });
+                        }
+                        _context.AddRange(campaignImgs);
+                    }
+                }
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }

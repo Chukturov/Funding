@@ -13,5 +13,6 @@ namespace Funding.Areas.Identity.Data
         public virtual IEnumerable<Campaign> Campaigns { get; set; }
         public virtual IEnumerable<Post> Posts { get; set; }
         public virtual IEnumerable<Like> Likes { get; set; }
+        public virtual IEnumerable<CampaignImgs> CampaignImgs { get; set; }
     }
 }

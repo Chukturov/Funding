@@ -10,6 +10,6 @@ namespace Funding.Data.Model
 {
     public class CampaignImgs : Image
     {
-        public Campaign campaign {get;set;}
+        public Campaign Сampaign {get;set;}
     }
 }

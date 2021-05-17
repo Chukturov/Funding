@@ -15,38 +15,35 @@
         <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Img" class="control-label"></label>
-                <input asp-for="Img" class="form-control" />
-                <span asp-validation-for="Img" class="text-danger"></span>
-                <div id="drop-area">
-                    <div class="my-form">
-                        <p>Загрузите изображения с помощью диалога выбора файлов или перетащив нужные изображения в выделенную область</p>
-                        <input type="file" id="fileElem" multiple accept="image/*" onchange="handleFiles(this.files)">
-                        <label class="button" for="fileElem">Выбрать изображения</label>
-                    </div>
-                    <progress id="progress-bar" max=100 value=0></progress>
-                    <div id="gallery"></div>
-                </div>
-            </div>
-            <div class="form-group">
-                <label asp-for="ImgFiles" class="control-label"></label>
-                <input asp-for="ImgFiles" accept="image/*" />
-                <span asp-validation-for="Img" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
+                <label asp-for="Name" class="control-label">Campaign name</label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ShortDescription" class="control-label"></label>
+                <label asp-for="ShortDescription" class="control-label">Short description</label>
                 <input asp-for="ShortDescription" class="form-control" />
                 <span asp-validation-for="ShortDescription" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="LongDescription" class="control-label"></label>
+                <label asp-for="LongDescription" class="control-label">Long description</label>
                 <input asp-for="LongDescription" class="form-control" />
                 <span asp-validation-for="LongDescription" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ImgFile" class="control-label">Select the main campaign photo:</label>
+                <input asp-for="ImgFile" type="file" accept="image/*"/>
+                <span asp-validation-for="ImgFile" class="text-danger"></span>
+            </div>
+            <div class="form-group" id="drop-area">
+                <div class="my-form">
+                    <label asp-for="ImgFiles" class="control-label">Campaign images</label>
+                    <p>Load images using the file selection dialog or by dragging and dropping the desired images into the selected area</p>
+                    <input asp-for="ImgFiles" type="file" id="fileElem" multiple accept="image/*" onchange="handleFiles(this.files)">
+                    <span asp-validation-for="Img" class="text-danger"></span>
+                    <label class="button" for="fileElem">Select images</label>
+                </div>
+                <progress id="progress-bar" max=100 value=0></progress>
+                <div id="gallery"></div>
             </div>
             <div class="form-group">
                 <input asp-for="User.Id" type="hidden" value="@UserManager.GetUserId(User)" />
@@ -99,6 +96,7 @@
         console.log(dt)
         console.log(files)
         handleFiles(files)
+        document.getElementById("fileElem").files = files
     }
 
     function handleFiles(files) {
@@ -108,7 +106,7 @@
         files.forEach(previewFile)
     }
 
-    function uploadFile(file, i) { // <- Добавили параметр `i`
+    function uploadFile(file, i) {
         var url = 'UploadImage'
         var xhr = new XMLHttpRequest()
         var formData = new FormData()
@@ -139,7 +137,6 @@
             let img = document.createElement('img')
             img.src = reader.result
             document.getElementById('gallery').appendChild(img)
-            document.getElementById('Img').value = reader.result;
         }
     }
 
